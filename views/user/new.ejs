@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register a User</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <form class="ui form" action="/register" method="POST">
+            <h4 class="ui dividing header">User Information</h4>
+            <div class="field">
+                <label>Name</label>
+                <div class="two fields">
+                    <div class="field">
+                        <input type="text" name="user[first_name]" id="" placeholder="First Name">
+                    </div>
+                    <div class="field">
+                        <input type="text" name="user[last_name]" id="" placeholder="Last Name">
+                    </div>
+                </div>
+                <div class="two fields">
+                    <div class="field">
+                        <input type="text" name="user[email]" id="" placeholder="email">
+                    </div>
+                    <div class="field">
+                        <input type="text" name="user[company]" id="" placeholder="Company Name">
+                    </div>
+                </div>
+            </div>
+            <div class="two fields">
+                <div class="field">
+                    <input type="text" name="user[address]" id="" placeholder="Address">
+                </div>
+                <div class="field">
+                    <input type="tel" name="user[phone]" id="" placeholder="Phone no">
+                </div>
+            </div>
+            <div class="field">
+                <label>Login Information</label>
+                <div class="two fields">
+                    <div class="field">
+                        <input type="text" name="user[username]" id="" placeholder="Username">
+                    </div>
+                    <div class="field">
+                        <input type="password" name="password" id="" placeholder="Password">
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label>Invitation Code</label>
+                <div class="field">
+                    <input type="text" name="inviteCode" id="" placeholder="">
+                </div>
+            </div>
+            <div class="field">
+                Admin Access: <input type="checkbox" name="user[isAdmin]" id="">
+            </div>
+            <button type="submit">Register</button>
+        </form>
+    </div>
+</body>
+
+</html>
