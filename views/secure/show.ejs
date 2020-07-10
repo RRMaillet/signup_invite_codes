@@ -9,18 +9,39 @@
 
 <body>
     Welcome to the Site <%= user.first_name %>!
+    <% if (user.isAdmin) { %>
 
     <h2>I see you're an Admin!</h2>
     <p>Let me show you all of the current invite codes!</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Used</th>
+                <th>Used By</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% invites.forEach(invite => { %>
+            <tr>
+                <td><%= invite.invite %></td>
+                <td><%= invite.isUsed %></td>
+                <td><% if (invite.user) { %>
+                    <%= invite.user.username %>
+                    <% } %>
+                </td>
+            </tr>
+            <% }); %>
+        </tbody>
+    </table>
 
-    <button id="newCode">Create a New Code</button>
-
-
+    </ul>
+    <input type="submit" id="newCode" value="Create New Code">
+    <% } %>
     <br>
     <a href="/logout">Logout</a>
 
-
-    <script src="/middleware/codeGenerator.js"></script>
+    <script type="module" src="javascripts/codeGenerator.js"></script>
 
 
 </body>

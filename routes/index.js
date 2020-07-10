@@ -1,14 +1,15 @@
 'use strict';
 
 const express = require('express');
-const router = express.Router();
+const router = express.Router({
+    mergeParams: true
+});
 const {
     landingPage,
     userRegistration,
     registerNewUser,
     userLogin,
     loginUser,
-    insidePage,
     logoutUser
 } = require('../controllers');
 const {
@@ -17,13 +18,11 @@ const {
 
 
 router.get('/', landingPage);
-router.get('/secure', insidePage);
 router.get('/register', userRegistration);
-router.post('/register', registerNewUser);
+router.post('/register', asyncErrors(registerNewUser));
 router.get('/login', userLogin);
 router.post('/login', loginUser);
 router.get('/logout', logoutUser);
-
 
 
 module.exports = router;

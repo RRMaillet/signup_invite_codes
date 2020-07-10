@@ -7,12 +7,16 @@ const passport = require('passport');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const createError = require('http-errors');
+const path = require('path');
+const morgan = require('morgan');
+const winston = require('./config');
 
 const User = require('./models/user');
-const InviteCode = require('./models/invite_code');
+
 
 
 const indexRouter = require('./routes/index');
+const secureRouter = require('./routes/secure');
 
 mongoose.connect('mongodb://localhost:27017/sean_reg_demo', {
     useNewUrlParser: true,
@@ -26,13 +30,16 @@ db.once('open', () => {
     console.log(`We're connected!`);
 });
 
-
+app.use(morgan('combined', {
+    stream: winston.stream
+}));
 app.set('view engine', 'ejs');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
     secret: 'This is the Secret for this demo',
@@ -61,6 +68,9 @@ app.use((req, res, next) => {
 //MOUNT ROUTES
 
 app.use('/', indexRouter);
+app.use('/secure', secureRouter);
+
+
 
 //CATCH 404 ERRORS
 app.use((req, res, next) => {
@@ -70,8 +80,13 @@ app.use((req, res, next) => {
 //ERROR HANDLER
 
 app.use(function (err, req, res, next) {
-    req.session.error = err.message;
-    res.redirect('back');
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
 });
 
 app.listen(3001, () => {

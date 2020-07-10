@@ -4,7 +4,6 @@ const passport = require('passport');
 const User = require('../models/user');
 const Invite = require('../models/invite_code');
 
-
 module.exports = {
     landingPage(req, res, next) {
         res.render('index');
@@ -14,15 +13,26 @@ module.exports = {
         res.render('user/new');
     },
 
-    registerNewUser(req, res, next) {
-        const newUser = new User(req.body.user)
-        if (req.body.user.isAdmin) {
-            newUser.isAdmin = true;
+    async registerNewUser(req, res, next) {
+        const newUser = new User(req.body.user);
+        const inviteCode = req.body.inviteCode;
+        let found = await Invite.findOne({
+            invite: inviteCode
+        });
+
+        if (found && !(found.isUsed)) {
+            await User.register(newUser, req.body.password);
+            let user = await User.findOne({
+                username: req.body.user.username
+            })
+            found.isUsed = true;
+            found.user = user._id;
+            await found.save();
+            res.redirect('/');
         } else {
-            newUser.isAdmin = false;
+
+            res.redirect('/register');
         }
-        User.register(newUser, req.body.password);
-        res.redirect('/');
     },
 
     userLogin(req, res, next) {
@@ -36,15 +46,8 @@ module.exports = {
         })(req, res, next);
     },
 
-    insidePage(req, res, next) {
-        res.render('secure/show', {
-            user: req.user
-        });
-    },
-
     logoutUser(req, res, next) {
         req.logout();
         res.redirect('/');
     }
-
-}
+};
